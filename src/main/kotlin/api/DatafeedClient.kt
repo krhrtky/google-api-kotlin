@@ -5,6 +5,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.content.ShoppingContent
 import com.google.api.services.content.model.Datafeed
+import com.google.auth.http.HttpCredentialsAdapter
 import java.io.IOException
 import java.math.BigInteger
 
@@ -13,7 +14,7 @@ class DatafeedClient {
         private val client = ShoppingContent.Builder(
             GoogleNetHttpTransport.newTrustedTransport(),
             GsonFactory.getDefaultInstance(),
-            Credentials.google,
+            HttpCredentialsAdapter(Credentials.google)
         ).build()
 
         fun get(merchantId: BigInteger, datafeedId: BigInteger): Datafeed? = try {
