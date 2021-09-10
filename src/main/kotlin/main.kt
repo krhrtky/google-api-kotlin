@@ -1,4 +1,4 @@
-import api.DatafeedClient
+import api.datafeed.DatafeedClient
 
 fun main(args: Array<String>) {
 

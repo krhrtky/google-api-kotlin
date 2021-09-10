@@ -1,0 +1,73 @@
+package api.datafeed
+
+import api.util.Credentials
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
+import com.google.api.client.json.gson.GsonFactory
+import com.google.api.services.content.ShoppingContent
+import com.google.api.services.content.model.Datafeed
+import com.google.api.services.content.model.DatafeedFetchSchedule
+import com.google.api.services.content.model.DatafeedTarget
+import com.google.auth.http.HttpCredentialsAdapter
+import java.io.IOException
+import java.math.BigInteger
+import java.net.URL
+
+class DatafeedClient {
+    companion object {
+        private val client = ShoppingContent.Builder(
+            GoogleNetHttpTransport.newTrustedTransport(),
+            GsonFactory.getDefaultInstance(),
+            HttpCredentialsAdapter(Credentials.google)
+        ).build()
+
+        fun get(merchantId: BigInteger, datafeedId: BigInteger): Datafeed? = try {
+            client.datafeeds().get(merchantId, datafeedId).execute()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+
+        fun list(merchantId: BigInteger) = try {
+            client.datafeeds().list(merchantId).execute()?.resources ?: emptyList()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            emptyList()
+        }
+
+        fun create(
+            merchantId: BigInteger,
+            datafeedId: Long,
+            name: String,
+            fileName: String,
+            fetchURL: URL,
+        ): Long? {
+
+            val fetchSchedule = DatafeedFetchSchedule()
+                .setDayOfMonth(Long.MIN_VALUE)
+                .setHour(Long.MIN_VALUE)
+                .setTimeZone("Asia/Tokyo")
+                .setFetchUrl(fetchURL.toString())
+
+            val targets = listOf(
+                DatafeedTarget()
+                    .setCountry("JP")
+                    .setLanguage("ja")
+                    .setIncludedDestinations(listOf(Destination.Shopping.name))
+            )
+
+            val datafeed = Datafeed()
+                .setId(datafeedId)
+                .setContentType(ContentType.Product.toString())
+                .setName(name)
+                .setFileName(fileName)
+                .setFetchSchedule(fetchSchedule)
+                .setTargets(targets)
+
+            return try {
+                client.datafeeds().insert(merchantId, datafeed).execute().id
+            } catch (e: Exception) {
+                null
+            }
+        }
+    }
+}
