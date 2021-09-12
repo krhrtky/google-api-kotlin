@@ -11,6 +11,7 @@ import com.google.auth.http.HttpCredentialsAdapter
 import java.io.IOException
 import java.math.BigInteger
 import java.net.URL
+import java.time.LocalDateTime
 
 class DatafeedClient {
     companion object {
@@ -40,11 +41,12 @@ class DatafeedClient {
             name: String,
             fileName: String,
             fetchURL: URL,
+            fetchDateTime: LocalDateTime,
         ): Long? {
 
             val fetchSchedule = DatafeedFetchSchedule()
-                .setDayOfMonth(Long.MIN_VALUE)
-                .setHour(Long.MIN_VALUE)
+                .setDayOfMonth(fetchDateTime.dayOfMonth.toLong())
+                .setHour(fetchDateTime.hour.toLong())
                 .setTimeZone("Asia/Tokyo")
                 .setFetchUrl(fetchURL.toString())
 
