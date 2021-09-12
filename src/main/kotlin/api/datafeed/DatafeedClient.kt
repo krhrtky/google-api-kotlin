@@ -71,5 +71,38 @@ class DatafeedClient {
                 null
             }
         }
+
+        fun update(
+            merchantId: BigInteger,
+            datafeedId: Long,
+            name: String,
+            fileName: String,
+            fetchURL: URL,
+            fetchDateTime: LocalDateTime,
+        ) {
+
+            val fetchSchedule = DatafeedFetchSchedule()
+                .setDayOfMonth(fetchDateTime.dayOfMonth.toLong())
+                .setHour(fetchDateTime.hour.toLong())
+                .setTimeZone("Asia/Tokyo")
+                .setFetchUrl(fetchURL.toString())
+
+            val targets = listOf(
+                DatafeedTarget()
+                    .setCountry("JP")
+                    .setLanguage("ja")
+                    .setIncludedDestinations(listOf(Destination.Shopping.toAPIValue()))
+            )
+
+            val datafeed = Datafeed()
+                .setId(datafeedId)
+                .setContentType(ContentType.Product.toAPIValue())
+                .setName(name)
+                .setFileName(fileName)
+                .setFetchSchedule(fetchSchedule)
+                .setTargets(targets)
+
+            client.datafeeds().update(merchantId, datafeedId.toBigInteger(), datafeed).execute()
+        }
     }
 }
