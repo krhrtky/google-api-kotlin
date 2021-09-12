@@ -8,6 +8,8 @@ enum class ContentType {
     Product,
     ;
 
+    fun toAPIValue() = this.toString()
+
     override fun toString(): String {
         return super.toString().lowercase()
     }
