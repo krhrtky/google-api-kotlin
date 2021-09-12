@@ -104,5 +104,9 @@ class DatafeedClient {
 
             client.datafeeds().update(merchantId, datafeedId.toBigInteger(), datafeed).execute()
         }
+
+        fun delete(merchantId: BigInteger, datafeedId: Long) = client
+            .datafeeds()
+            .delete(merchantId, datafeedId.toBigInteger())
     }
 }
