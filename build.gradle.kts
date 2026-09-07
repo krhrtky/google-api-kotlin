@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.5.31"
+    kotlin("jvm") version "1.9.25"
     application
 }
 
@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation("com.google.apis:google-api-services-content:v2.1-rev20211013-1.32.1")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.2.0")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:1.5.31")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.25")
 }
 
 tasks.test {
